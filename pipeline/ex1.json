@@ -1,0 +1,163 @@
+{
+	"name": "ex1",
+	"properties": {
+		"activities": [
+			{
+				"name": "ler csvs",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "dstestecsv",
+						"type": "DatasetReference",
+						"parameters": {
+							"conteinerName": "csvarquivos",
+							"fileName": "*",
+							"separatorName": "*"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "filtrar mdb",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "ler csvs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('ler csvs').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(equals(item().name,'moviesDB.csv'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lercsvs",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filtrar mdb",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filtrar mdb').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "csv para parquet",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dstestecsv",
+									"type": "DatasetReference",
+									"parameters": {
+										"conteinerName": "csvarquivos",
+										"fileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"separatorName": ";"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_gen_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"cnome": "parquetfiles",
+										"fnome": {
+											"value": "@replace(item().name,'.csv','')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "adfexercicios"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-08-04T01:41:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
