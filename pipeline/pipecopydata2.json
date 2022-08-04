@@ -1,0 +1,83 @@
+{
+	"name": "pipecopydata2",
+	"properties": {
+		"activities": [
+			{
+				"name": "de_excel_pra_csv",
+				"description": "teste de copia arquivo formato excel para csv",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"additionalColumns": [
+							{
+								"name": "data_carga",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dsexceltestefixo",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dstestecsv",
+						"type": "DatasetReference",
+						"parameters": {
+							"conteinerName": "csvarquivos",
+							"fileName": "cvsdoDF.csv",
+							"separatorName": ";"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "atividasADF"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-08-01T21:40:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

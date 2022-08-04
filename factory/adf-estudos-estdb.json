@@ -1,0 +1,9 @@
+{
+	"name": "adf-estudos-estdb",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9f1d265a-2f5f-472f-8067-376ffc98d614",
+		"tenantId": "092b6754-0f0c-47a9-9fcd-d63803ac653d"
+	}
+}

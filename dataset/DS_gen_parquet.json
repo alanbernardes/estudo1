@@ -1,0 +1,35 @@
+{
+	"name": "DS_gen_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cnome": {
+				"type": "string"
+			},
+			"fnome": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().fnome,'.parquet')",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().cnome",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
