@@ -1,0 +1,6 @@
+{
+	"name": "integrationRuntimeEstudos",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
