@@ -1,0 +1,17 @@
+{
+	"name": "arquivosdopc",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\Users\\Dell\\Documents\\dumps",
+			"userId": "ODYSSEY",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwNjE1YmQwOS1lZjc3LTQwNzItOTI4Yi0xN2MzYzljOTI5MDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntimeEstudos",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
